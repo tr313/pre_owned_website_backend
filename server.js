@@ -1,3 +1,4 @@
+
 // server.js
 const express = require('express');
 const Stripe = require('stripe');
@@ -31,8 +32,10 @@ app.post('/create-checkout-session', async (req, res) => {
 
     res.json({ url: session.url });
   } catch (err) {
+    console.error('Stripe error:', err);
     res.status(500).json({ error: err.message });
   }
 });
 
-app.listen(4242, () => console.log('🚀 Server running at http://localhost:4242'));
+const PORT = process.env.PORT || 4242;
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
