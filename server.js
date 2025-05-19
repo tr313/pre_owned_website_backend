@@ -1,3 +1,4 @@
+
 const express = require('express');
 const Stripe = require('stripe');
 const cors = require('cors');
@@ -6,7 +7,8 @@ require('dotenv').config();
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-app.use(cors());
+// Fixed CORS for all origins
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 app.post('/create-checkout-session', async (req, res) => {
