@@ -7,9 +7,12 @@ require('dotenv').config();
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// CORS configured for your Netlify domain
+// Bulletproof CORS for Netlify
 app.use(cors({
-  origin: 'https://storied-frangipane-10d78c.netlify.app'
+  origin: 'https://storied-frangipane-10d78c.netlify.app',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 }));
 
 app.use(express.json());
