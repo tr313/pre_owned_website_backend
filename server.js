@@ -7,8 +7,11 @@ require('dotenv').config();
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Fixed CORS for all origins
-app.use(cors({ origin: '*' }));
+// CORS configured for your Netlify domain
+app.use(cors({
+  origin: 'https://storied-frangipane-10d78c.netlify.app'
+}));
+
 app.use(express.json());
 
 app.post('/create-checkout-session', async (req, res) => {
@@ -26,8 +29,8 @@ app.post('/create-checkout-session', async (req, res) => {
         quantity: item.quantity,
       })),
       mode: 'payment',
-      success_url: 'https://stupendous-puppy-31ef09.netlify.app/success.html',
-      cancel_url: 'https://stupendous-puppy-31ef09.netlify.app/cart.html',
+      success_url: 'https://storied-frangipane-10d78c.netlify.app/success/',
+      cancel_url: 'https://storied-frangipane-10d78c.netlify.app/cart/',
     });
 
     res.json({ url: session.url });
