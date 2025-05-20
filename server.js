@@ -1,19 +1,15 @@
 
 const express = require('express');
-const Stripe = require('stripe');
 const cors = require('cors');
+const Stripe = require('stripe');
 require('dotenv').config();
 
 const app = express();
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Bulletproof CORS for Netlify
-app.use(cors({
-  origin: 'https://storied-frangipane-10d78c.netlify.app',
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-  credentials: true
-}));
+// FINAL CORS FIX — allow all origins + handle preflight
+app.use(cors());
+app.options('*', cors());
 
 app.use(express.json());
 
@@ -24,9 +20,7 @@ app.post('/create-checkout-session', async (req, res) => {
       line_items: req.body.items.map(item => ({
         price_data: {
           currency: 'cad',
-          product_data: {
-            name: item.product
-          },
+          product_data: { name: item.product },
           unit_amount: item.price * 100,
         },
         quantity: item.quantity,
@@ -38,7 +32,7 @@ app.post('/create-checkout-session', async (req, res) => {
 
     res.json({ url: session.url });
   } catch (err) {
-    console.error('Stripe error:', err);
+    console.error('❌ Stripe error:', err);
     res.status(500).json({ error: err.message });
   }
 });
